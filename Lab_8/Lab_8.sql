@@ -1,3 +1,5 @@
+--Lab_8
+
 alter trigger t_task_1 disable;
 alter trigger t_task_2 disable;
 alter trigger t_task_3 disable;
@@ -9,7 +11,7 @@ create or replace trigger T_TASK_1
 declare
 begin
     delete from COMPOSITION where ID = :OLD.ID;
-end;
+end T_TASK_1;
 
 -------------------
 
@@ -25,20 +27,44 @@ create or replace trigger T_TASK_2
 declare
 begin
     insert into simple_menu values (:NEW.name, :NEW.type);
-end;
+end T_TASK_2;
 
+insert into MENU values(101, 'borsch', 800, 1000, 1, 100, 10);
+
+select * from simple_menu;
 -------------------
 
 create or replace trigger T_TASK_3
-    after update on MENU
+    before update of mass on MENU
     for each row
 declare
 begin
-    update MENU set calories = calories * (:NEW.mass / :OLD.mass) where ID = :NEW.ID;
-end;
-
-select * from menu order by ID ASC;
+    :NEW.calories := :OLD.calories * (:NEW.mass / :OLD.mass);
+end T_TASK_3;
 
 update MENU set mass = 500 where ID = 103;
+
+select ID, MASS, CALORIES from menu where ID = 103;
+
 -------------------
+
+create or replace trigger T_TASK_4
+    before update of PRICE on MENU
+    for each row
+declare
+    pragma autonomous_transaction;
+    min_id MENU.ID%TYPE;
+    change_price MENU.PRICE%TYPE;
+begin
+    select min(ID) into min_id from MENU;
+    if :old.ID = min_id then
+        change_price := :old.price - :new.price;
+        update MENU set price = price - change_price where ID != min_id;
+    end if;
+    commit;
+end T_TASK_4;
+
+update MENU set price = 160 where ID = 101;
+
+select ID, name, price from MENU order by ID ASC;
 
