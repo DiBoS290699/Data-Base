@@ -1,4 +1,4 @@
---Вывести название блюда с наибольшим количествои ингридиентов:
+--Р’С‹РІРµСЃС‚Рё РЅР°Р·РІР°РЅРёРµ Р±Р»СЋРґР° СЃ РЅР°РёР±РѕР»СЊС€РёРј РєРѕР»РёС‡РµСЃС‚РІРѕРё РёРЅРіСЂРёРґРёРµРЅС‚РѕРІ:
 
 select name from MENU inner join COMPOSITION C on MENU.ID = C.ID group by name
 having count(*) = (select MAX(count(*)) from COMPOSITION group by ID);

@@ -1,3 +1,3 @@
---Вывести тип блюда, который имеет больше всего блюд в меню:
+--Р’С‹РІРµСЃС‚Рё С‚РёРї Р±Р»СЋРґР°, РєРѕС‚РѕСЂС‹Р№ РёРјРµРµС‚ Р±РѕР»СЊС€Рµ РІСЃРµРіРѕ Р±Р»СЋРґ РІ РјРµРЅСЋ:
 
 select type from MENU group by type having count(*) = (select MAX(count(*)) as max from MENU group by type);
